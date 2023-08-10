@@ -12,11 +12,7 @@ COPY . /src/roop
 
 WORKDIR /src/roop
 
-ENV VIRTUAL_ENV=/venv
-RUN python3 -m venv $VIRTUAL_ENV
-ENV PATH="$VIRTUAL_ENV/bin:$PATH"
-
-RUN python3 -m pip install --upgrade pip && pip3 install -r requirements-api.txt
+RUN pip3 install -r requirements-api.txt
 
 EXPOSE 7860
 
