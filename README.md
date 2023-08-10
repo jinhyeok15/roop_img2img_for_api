@@ -91,14 +91,30 @@ python 3.10.6
 pip install -r requirements-api.txt
 ```
 
-### 서버 실행
+### api local
 
 ```console
 sh run-api.sh
 ```
 
-### 서버 종료
+```console
+sh stop-api.sh
+```
+
+### 배포
+
+```console
+sh deploy.sh
+```
 
 ```console
 sh destroy.sh
+```
+
+### 도커 용량 비우기
+
+```console
+sudo docker system prune
+sudo docker volume prune -a
+sudo docker image prune -a
 ```
