@@ -85,7 +85,7 @@ def process_frame(source_face: Face, reference_face: Face, temp_frame: Frame) ->
     return temp_frame
 
 
-async def process_image(source_image: str, target_image: str):
+def process_image(source_image: str, target_image: str):
     target_frame = cv2.imdecode(get_buffer_image(target_image), cv2.IMREAD_COLOR)
     result = process_frame(None, None, target_frame)
     _, buffer = cv2.imencode('.png', result)

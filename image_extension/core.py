@@ -135,7 +135,7 @@ async def start_process(
     # process frame
     tmp_image = base_image
     for frame_processor in get_frame_processors_modules(roop.globals.frame_processors):
-        tmp_image = await frame_processor.process_image(roop_image, tmp_image)
+        tmp_image = frame_processor.process_image(roop_image, tmp_image)
         frame_processor.post_process()
 
     result_image = tmp_image
