@@ -19,12 +19,11 @@ NAME = 'ROOP.FACE-ENHANCER'
 
 def get_face_enhancer() -> Any:
     global FACE_ENHANCER
-
-    with THREAD_LOCK:
-        if FACE_ENHANCER is None:
-            model_path = resolve_relative_path('../models/GFPGANv1.4.pth')
-            # todo: set models path -> https://github.com/TencentARC/GFPGAN/issues/399
-            FACE_ENHANCER = GFPGANer(model_path=model_path, upscale=1, device=get_device())
+    # with THREAD_LOCK:
+    if FACE_ENHANCER is None:
+        model_path = resolve_relative_path('../models/GFPGANv1.4.pth')
+        # todo: set models path -> https://github.com/TencentARC/GFPGAN/issues/399
+        FACE_ENHANCER = GFPGANer(model_path=model_path, upscale=1, device=get_device())
     return FACE_ENHANCER
 
 
@@ -69,11 +68,11 @@ def enhance_face(target_face: Face, temp_frame: Frame) -> Frame:
     end_y = max(0, end_y + padding_y)
     temp_face = temp_frame[start_y:end_y, start_x:end_x]
     if temp_face.size:
-        with THREAD_SEMAPHORE:
-            _, _, temp_face = get_face_enhancer().enhance(
-                temp_face,
-                paste_back=True
-            )
+        # with THREAD_SEMAPHORE:
+        _, _, temp_face = get_face_enhancer().enhance(
+            temp_face,
+            paste_back=True
+        )
         temp_frame[start_y:end_y, start_x:end_x] = temp_face
     return temp_frame
 

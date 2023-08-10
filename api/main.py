@@ -30,8 +30,8 @@ class Img2ImgResponse(BaseModel):
 
 
 @app.post("/api/v1/img2img")
-def img2img_api(req: Img2imgRequestBody) -> Img2ImgResponse:
-    image = start_process(
+async def img2img_api(req: Img2imgRequestBody) -> Img2ImgResponse:
+    image = await start_process(
         req.base_image,
         req.roop_image,
         req.face_index
