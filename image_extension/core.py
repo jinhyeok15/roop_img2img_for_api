@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+import importlib
 import os
 import sys
 # single thread doubles cuda performance - needs to be set before torch import
@@ -8,7 +8,8 @@ if any(arg.startswith('--execution-provider') for arg in sys.argv):
 # reduce tensorflow log level
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 import warnings
-from typing import List
+from typing import List, Any
+from types import ModuleType
 import platform
 import shutil
 import onnxruntime
@@ -17,11 +18,33 @@ import roop.globals
 import roop.metadata
 import roop.ui as ui
 from roop.predictor import predict_image, predict_video
-from roop.processors.frame.core import get_frame_processors_modules
+from roop.processors.frame.core import FRAME_PROCESSORS_INTERFACE, FRAME_PROCESSORS_MODULES
 from roop.utilities import has_image_extension, is_image, is_video, detect_fps, create_video, extract_frames, get_temp_frame_paths, restore_audio, create_temp, move_temp, clean_temp, normalize_output_path
 
 warnings.filterwarnings('ignore', category=FutureWarning, module='insightface')
 warnings.filterwarnings('ignore', category=UserWarning, module='torchvision')
+
+def load_frame_processor_module(frame_processor: str) -> Any:
+    try:
+        frame_processor_module = importlib.import_module(f'image_extension.{frame_processor}')
+        for method_name in FRAME_PROCESSORS_INTERFACE:
+            if not hasattr(frame_processor_module, method_name):
+                raise NotImplementedError
+    except ModuleNotFoundError:
+        sys.exit(f'Frame processor {frame_processor} not found.')
+    except NotImplementedError:
+        sys.exit(f'Frame processor {frame_processor} not implemented correctly.')
+    return frame_processor_module
+
+
+def get_frame_processors_modules(frame_processors: List[str]) -> List[ModuleType]:
+    global FRAME_PROCESSORS_MODULES
+
+    if not FRAME_PROCESSORS_MODULES:
+        for frame_processor in frame_processors:
+            frame_processor_module = load_frame_processor_module(frame_processor)
+            FRAME_PROCESSORS_MODULES.append(frame_processor_module)
+    return FRAME_PROCESSORS_MODULES
 
 
 def encode_execution_providers(execution_providers: List[str]) -> List[str]:
