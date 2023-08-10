@@ -86,7 +86,7 @@ def process_frame(source_face: Face, reference_face: Face, temp_frame: Frame) ->
 
 
 def process_image(source_image: str, target_image: str) -> str:
-    target_frame = cv2.imdecode(get_buffer_image(target_image))
+    target_frame = cv2.imdecode(get_buffer_image(target_image), cv2.IMREAD_COLOR)
     result = process_frame(None, None, target_frame)
     _, buffer = cv2.imencode('.png', result)
     return get_base64_from_buffer(buffer)
