@@ -6,6 +6,7 @@ RUN apt-get -y update && \
     openssl libssl-dev \
     python3-dev \
     ffmpeg \
+    tk \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
