@@ -17,7 +17,7 @@ services:
         container_name: roop-img2img-api
         image: roop-img2img-api
         build:
-            context: ./api
+            context: ./
             dockerfile: Dockerfile
         expose:
             - 7860
