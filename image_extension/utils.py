@@ -11,4 +11,4 @@ def get_buffer_image(base64img: str):
 
 
 def get_base64_from_buffer(buffer):
-    base64.b64encode(buffer).decode()
+    return base64.b64encode(buffer).decode()
