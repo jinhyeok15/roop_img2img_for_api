@@ -32,6 +32,7 @@ FRAME_PROCESSORS_INTERFACE = [
     'post_process'
 ]
 
+
 def load_frame_processor_module(frame_processor: str) -> Any:
     try:
         frame_processor_module = importlib.import_module(f'image_extension.{frame_processor}')
@@ -124,6 +125,12 @@ async def start_process(
 ):
     roop.globals.many_faces = False
     roop.globals.reference_face_position = face_index
+    roop.globals.reference_frame_number = 0
+    roop.globals.execution_providers = decode_execution_providers(['cpu'])
+    roop.globals.similar_face_distance = 0.85
+    roop.globals.execution_threads = suggest_execution_threads()
+    roop.globals.temp_frame_quality = 0
+
     if not pre_check():
         return
 
