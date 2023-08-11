@@ -42,7 +42,7 @@ def clear_face_enhancer() -> None:
 
 
 def pre_check() -> bool:
-    download_directory_path = resolve_relative_path('../models')
+    download_directory_path = resolve_relative_path('../roop/processors/models')
     conditional_download(download_directory_path, ['https://huggingface.co/henryruhs/roop/resolve/main/GFPGANv1.4.pth'])
     return True
 
@@ -68,11 +68,11 @@ def enhance_face(target_face: Face, temp_frame: Frame) -> Frame:
     end_y = max(0, end_y + padding_y)
     temp_face = temp_frame[start_y:end_y, start_x:end_x]
     if temp_face.size:
-        # with THREAD_SEMAPHORE:
-        _, _, temp_face = get_face_enhancer().enhance(
-            temp_face,
-            paste_back=True
-        )
+        with THREAD_SEMAPHORE:
+            _, _, temp_face = get_face_enhancer().enhance(
+                temp_face,
+                paste_back=True
+            )
         temp_frame[start_y:end_y, start_x:end_x] = temp_face
     return temp_frame
 
