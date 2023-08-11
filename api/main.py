@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
+from pydantic import BaseModel, validator, ValidationError
 from fastapi.middleware.cors import CORSMiddleware
 
 from image_extension.core import start_process
@@ -24,9 +24,21 @@ class Img2imgRequestBody(BaseModel):
     roop_image: str
     face_index: int
 
+    @validator('base_image', 'roop_image')
+    def validate_blank(cls, v):
+        if not bool(v):
+            raise ValidationError("image should not blank")
+        return v
+
 
 class Img2ImgResponse(BaseModel):
     image: str
+
+    @validator('image')
+    def validate_blank(cls, v):
+        if not bool(v):
+            raise ValidationError("image should not blank")
+        return v
 
 
 @app.post("/api/v1/img2img")

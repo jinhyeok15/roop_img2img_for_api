@@ -74,9 +74,12 @@ def process_frame(source_face: Face, reference_face: Face, temp_frame: Frame) ->
 
 
 def process_image(source_image: str, target_image: str):
-    source_face = get_one_face(cv2.imdecode(get_buffer_image(source_image), cv2.IMREAD_COLOR))
+    source_frame = cv2.imdecode(get_buffer_image(source_image), cv2.IMREAD_COLOR)
+    source_face = get_one_face(source_frame)
+
     target_frame = cv2.imdecode(get_buffer_image(target_image), cv2.IMREAD_COLOR)
-    reference_face = None if roop.globals.many_faces else get_one_face(target_frame, roop.globals.reference_face_position)
+
+    reference_face = get_one_face(target_frame, roop.globals.reference_face_position)
     result = process_frame(source_face, reference_face, target_frame)
     _, buffer = cv2.imencode('.png', result)
     return get_base64_from_buffer(buffer)
